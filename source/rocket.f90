@@ -382,7 +382,8 @@ contains
         ! Set the initial guess for the equilibrium solve based on throat conditions
         soln%eq_soln(idx) = EqSolution(self%eq_solver)!, T_init=soln%eq_soln(T_idx)%T, nj_init=soln%eq_soln(nj_idx)%nj)
 
-        awt = soln%eq_soln(soln%throat_idx)%n*soln%eq_soln(soln%throat_idx)%T/(soln%pressure(soln%throat_idx)*soln%v_sonic(soln%throat_idx))
+        awt = soln%eq_soln(soln%throat_idx)%n*soln%eq_soln(soln%throat_idx)%T/ &
+            (soln%pressure(soln%throat_idx)*soln%v_sonic(soln%throat_idx))
         do i = 1, size(pi_p)
             soln%station(idx) = "exit    "
 
@@ -443,7 +444,8 @@ contains
 
         call log_debug("Starting frozen pi/p calculations")
 
-        awt = soln%eq_soln(soln%throat_idx)%n*soln%eq_soln(soln%throat_idx)%T/(soln%pressure(soln%throat_idx)*soln%v_sonic(soln%throat_idx))
+        awt = soln%eq_soln(soln%throat_idx)%n*soln%eq_soln(soln%throat_idx)%T/ &
+            (soln%pressure(soln%throat_idx)*soln%v_sonic(soln%throat_idx))
         do i = 1, size(pi_p)
             soln%station(idx) = "exit    "
 
@@ -1061,7 +1063,8 @@ contains
             do j = 1, max_iter_area
 
                 ! Solve equilibrium at combustor end (isentropic with infinity)
-                call self%eq_solver%solve(soln%eq_soln(idx), "sp", S_ref, soln%pressure(idx), reactant_weights, partials=soln%eq_partials(idx))
+                call self%eq_solver%solve(soln%eq_soln(idx), "sp", S_ref, soln%pressure(idx), reactant_weights, &
+                    partials=soln%eq_partials(idx))
 
                 ! Compute combustor properties
                 h = dot_product(soln%eq_soln(idx)%nj, soln%eq_soln(idx)%thermo%enthalpy)*soln%eq_soln(idx)%T
@@ -1145,7 +1148,8 @@ contains
 
     end subroutine
 
-    function RocketSolver_solve(self, reactant_weights, pc, pi_p, fac, subar, supar, mdot, ac_at, n_frz, tc_est, hc, tc) result(soln)
+    function RocketSolver_solve(self, reactant_weights, pc, pi_p, fac, subar, supar, mdot, ac_at, n_frz, tc_est, hc, tc) &
+        result(soln)
         ! Solve the rocket proclem
 
         ! Arguments

@@ -306,7 +306,7 @@ contains
                 soln%eq_soln(idx)%nj(j) = (weights(i)/self%eq_solver%reactants%species(i)%molecular_weight)/sum(weights)
                 soln%eq_soln(idx)%ln_nj(j) = log(soln%eq_soln(idx)%nj(j))
             else
-                call log_warning("ShockSolver_solve_incident_frozen: Reactant not found in product list when setting frozen amounts.")
+                call log_warning("ShockSolver_solve_incident_frozen: Reactant not found in products.")
             end if
         end do
 
@@ -779,10 +779,11 @@ contains
         do i = 1, self%eq_solver%num_reactants
             j = findloc(self%eq_solver%products%species_names, self%eq_solver%reactants%species_names(i), 1)
             if (j > 0) then
-                soln%eq_soln(1)%nj(j) = (reactant_weights(i)/self%eq_solver%reactants%species(i)%molecular_weight)/sum(reactant_weights)
+                soln%eq_soln(1)%nj(j) = (reactant_weights(i)/ &
+                    self%eq_solver%reactants%species(i)%molecular_weight)/sum(reactant_weights)
                 soln%eq_soln(1)%ln_nj(j) = log(soln%eq_soln(1)%nj(j))
             else
-                call log_warning("ShockSolver_solve_incident_frozen: Reactant not found in product list when setting frozen amounts.")
+                call log_warning("ShockSolver_solve_incident_frozen: Reactant not found in products.")
             end if
         end do
 
