@@ -2197,7 +2197,8 @@ contains
         end select
     end function
 
-    function cea_shock_solver_solve(sptr, slptr, weights, T0, p0, mach1_or_u1, use_mach, refl, incd_froz, refl_froz) result(ierr) bind(c)
+    function cea_shock_solver_solve(sptr, slptr, weights, T0, p0, mach1_or_u1, use_mach, refl, incd_froz, refl_froz) &
+        result(ierr) bind(c)
         integer(c_int) :: ierr
         type(c_ptr),     intent(in), value :: sptr
         type(c_ptr),     intent(in), value :: slptr
