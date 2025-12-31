@@ -2,7 +2,7 @@
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 # CEA (Chemical Equilibrium with Applications)
-![CEA logo](docs/source/images/logo.png)
+<img src="docs/source/images/logo.png" alt="CEA logo" width="200">
 
 A modernized version of NASA's Chemical Equilibrium with Applications.
 
