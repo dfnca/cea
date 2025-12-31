@@ -858,7 +858,8 @@ contains
         per_mole(:ns) = mix%per_mole_from_per_weight(per_weight(:ns))
     end function
 
-    function cea_mixture_chem_eq_ratio_to_of_ratio(mptr, len, oxidant_weights, fuel_weights, chem_eq_ratio, of_ratio) result(ierr) bind(c)
+    function cea_mixture_chem_eq_ratio_to_of_ratio(mptr, len, oxidant_weights, fuel_weights, &
+        chem_eq_ratio, of_ratio) result(ierr) bind(c)
         integer(c_int) :: ierr
         type(c_ptr), intent(in), value :: mptr
         integer(c_int), intent(in), value :: len
@@ -878,7 +879,8 @@ contains
         of_ratio = mix%of_from_equivalence(oxidant_weights(:ns), fuel_weights(:ns), chem_eq_ratio)
     end function
 
-    function cea_mixture_weight_eq_ratio_to_of_ratio(mptr, len, oxidant_weights, fuel_weights, weight_eq_ratio, of_ratio) result(ierr) bind(c)
+    function cea_mixture_weight_eq_ratio_to_of_ratio(mptr, len, oxidant_weights, fuel_weights, &
+        weight_eq_ratio, of_ratio) result(ierr) bind(c)
         integer(c_int) :: ierr
         type(c_ptr), intent(in), value :: mptr
         integer(c_int), intent(in), value :: len
@@ -898,7 +900,8 @@ contains
         of_ratio = mix%of_from_phi(oxidant_weights(:ns), fuel_weights(:ns), weight_eq_ratio)
     end function
 
-    function cea_mixture_of_ratio_to_weights(mptr, len, oxidant_weights, fuel_weights, of_ratio, weights) result(ierr) bind(c)
+    function cea_mixture_of_ratio_to_weights(mptr, len, oxidant_weights, fuel_weights, &
+        of_ratio, weights) result(ierr) bind(c)
         integer(c_int) :: ierr
         type(c_ptr), intent(in), value :: mptr
         integer(c_int), intent(in), value :: len
@@ -921,7 +924,8 @@ contains
             of_ratio)
     end function
 
-    function cea_mixture_calc_property(mptr, prop_type, len_weights, weights, temperature, prop_value) result(ierr) bind(c)
+    function cea_mixture_calc_property(mptr, prop_type, len_weights, weights, &
+        temperature, prop_value) result(ierr) bind(c)
         integer(c_int) :: ierr
         type(c_ptr), intent(in), value :: mptr
         integer(c_int), intent(in), value :: prop_type
@@ -953,7 +957,8 @@ contains
         end select
     end function
 
-    function cea_mixture_calc_property_multitemp(mptr, prop_type, len_weights, weights, len_temperatures, temperatures, prop_value) result(ierr) bind(c)
+    function cea_mixture_calc_property_multitemp(mptr, prop_type, len_weights, &
+        weights, len_temperatures, temperatures, prop_value) result(ierr) bind(c)
         integer(c_int) :: ierr
         type(c_ptr), intent(in), value :: mptr
         integer(c_int), intent(in), value :: prop_type
@@ -986,7 +991,8 @@ contains
         end select
     end function
 
-    function cea_mixture_calc_property_tp(mptr, prop_type, len_weights, weights, temperature, pressure, prop_value) result(ierr) bind(c)
+    function cea_mixture_calc_property_tp(mptr, prop_type, len_weights, weights, &
+        temperature, pressure, prop_value) result(ierr) bind(c)
         integer(c_int) :: ierr
         type(c_ptr), intent(in), value :: mptr
         integer(c_int), intent(in), value :: prop_type
@@ -1019,7 +1025,8 @@ contains
         end select
     end function
 
-    function cea_mixture_calc_property_tp_multitemp(mptr, prop_type, len_weights, weights, len_temperatures, temperatures, pressure, prop_value) result(ierr) bind(c)
+    function cea_mixture_calc_property_tp_multitemp(mptr, prop_type, len_weights, weights, &
+        len_temperatures, temperatures, pressure, prop_value) result(ierr) bind(c)
         integer(c_int) :: ierr
         type(c_ptr), intent(in), value :: mptr
         integer(c_int), intent(in), value :: prop_type
@@ -1550,7 +1557,8 @@ contains
         end select
     end function
 
-    function cea_rocket_solver_solve_iac(sptr, slptr, weights, pc, pi_p, n_pi_p, subar, nsubar, supar, nsupar, n_frz, hc_or_tc, use_hc, tc_est, use_tc_est) result(ierr) bind(c)
+    function cea_rocket_solver_solve_iac(sptr, slptr, weights, pc, pi_p, n_pi_p, subar, nsubar, &
+        supar, nsupar, n_frz, hc_or_tc, use_hc, tc_est, use_tc_est) result(ierr) bind(c)
         integer(c_int) :: ierr
         type(c_ptr),     intent(in), value :: sptr
         type(c_ptr),     intent(in), value :: slptr
@@ -1660,7 +1668,8 @@ contains
         if (.not. solution%converged) ierr = CEA_NOT_CONVERGED
     end function
 
-    function cea_rocket_solver_solve_fac(sptr, slptr, weights, pc, pi_p, n_pi_p, subar, nsubar, supar, nsupar, n_frz, hc_or_tc, use_hc, mdot_or_acat, use_mdot, tc_est, use_tc_est) result(ierr) bind(c)
+    function cea_rocket_solver_solve_fac(sptr, slptr, weights, pc, pi_p, n_pi_p, subar, nsubar, &
+        supar, nsupar, n_frz, hc_or_tc, use_hc, mdot_or_acat, use_mdot, tc_est, use_tc_est) result(ierr) bind(c)
         integer(c_int) :: ierr
         type(c_ptr),     intent(in), value :: sptr
         type(c_ptr),     intent(in), value :: slptr
@@ -2096,9 +2105,11 @@ contains
         if (refl_froz .eqv. .true.) reflected_frozen = .true.
 
         if (use_mach .eqv. .true.) then
-            solution = solver%solve(weights(:nr), T0, p0, mach1=mach1_or_u1, reflected=reflected, incident_frozen=incident_frozen, reflected_frozen=reflected_frozen)
+            solution = solver%solve(weights(:nr), T0, p0, mach1=mach1_or_u1, &
+                reflected=reflected, incident_frozen=incident_frozen, reflected_frozen=reflected_frozen)
         else
-            solution = solver%solve(weights(:nr), T0, p0, u1=mach1_or_u1, reflected=reflected, incident_frozen=incident_frozen, reflected_frozen=reflected_frozen)
+            solution = solver%solve(weights(:nr), T0, p0, u1=mach1_or_u1, &
+                reflected=reflected, incident_frozen=incident_frozen, reflected_frozen=reflected_frozen)
         end if
         if (.not. solution%converged) ierr = CEA_NOT_CONVERGED
     end function

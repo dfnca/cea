@@ -478,7 +478,8 @@ contains
                     if (need_hc) hc = compute_reactant_enthalpy(prob, reactants, weights)
 
                     ! Call the rocket solver
-                    solution = solver%solve(weights, pc, pi_p, fac=fac, subar=subar, supar=supar, mdot=mdot, ac_at=ac_at, n_frz=nfrz, tc_est=tc_est, hc=hc, tc=tc)
+                    solution = solver%solve(weights, pc, pi_p, fac=fac, subar=subar, supar=supar, &
+                        mdot=mdot, ac_at=ac_at, n_frz=nfrz, tc_est=tc_est, hc=hc, tc=tc)
 
                     ! Set the solution
                     solutions(i, j, k) = solution
@@ -1095,9 +1096,11 @@ contains
                     if (is_trace(idx) .eqv. .false.) then
                         eq_fmt = get_shock_species_format(solutions, idx, 1, k, m, 2, prob%output%mass_fractions, trace)
                         if (prob%output%mass_fractions) then
-                            write(ioout, eq_fmt) solver%eq_solver%products%species_names(idx), (solutions(i, 1, k)%eq_soln(2)%mass_fractions(idx), i=1,m)
+                            write(ioout, eq_fmt) solver%eq_solver%products%species_names(idx), &
+                                (solutions(i, 1, k)%eq_soln(2)%mass_fractions(idx), i=1,m)
                         else
-                            write(ioout, eq_fmt) solver%eq_solver%products%species_names(idx), (solutions(i, 1, k)%eq_soln(2)%mole_fractions(idx), i=1,m)
+                            write(ioout, eq_fmt) solver%eq_solver%products%species_names(idx), &
+                                (solutions(i, 1, k)%eq_soln(2)%mole_fractions(idx), i=1,m)
                         end if
                     end if
                 end do
@@ -1186,9 +1189,11 @@ contains
                     if (is_trace(idx) .eqv. .false.) then
                         eq_fmt = get_shock_species_format(solutions, idx, 1, k, m, 3, prob%output%mass_fractions, trace)
                         if (prob%output%mass_fractions) then
-                            write(ioout, eq_fmt) solver%eq_solver%products%species_names(idx), (solutions(i, 1, k)%eq_soln(3)%mass_fractions(idx), i=1,m)
+                            write(ioout, eq_fmt) solver%eq_solver%products%species_names(idx), &
+                                (solutions(i, 1, k)%eq_soln(3)%mass_fractions(idx), i=1,m)
                         else
-                            write(ioout, eq_fmt) solver%eq_solver%products%species_names(idx), (solutions(i, 1, k)%eq_soln(3)%mole_fractions(idx), i=1,m)
+                            write(ioout, eq_fmt) solver%eq_solver%products%species_names(idx), &
+                                (solutions(i, 1, k)%eq_soln(3)%mole_fractions(idx), i=1,m)
                         end if
                     end if
                 end do
@@ -1292,7 +1297,8 @@ contains
                 write(ioout, '(A, 14F9.3)') ' (dln(V)/dln(T))p', ((solutions(i, j, k)%eq_partials%dlnV_dlnT, j=1,n), i=1,m)
                 write(ioout, '(A, 14F9.4)') ' Cp, kJ/kg-K     ', ((solutions(i, j, k)%eq_soln%cp_eq,         j=1,n), i=1,m)
                 write(ioout, '(A, 14F9.4)') ' Gamma_s         ', ((solutions(i, j, k)%eq_partials%gamma_s,   j=1,n), i=1,m)
-                write(ioout, '(A, 14F9.3)') ' Son. Vel., m/s  ', ((sqrt(solutions(i, j, k)%eq_soln%n*R*solutions(i, j, k)%eq_partials%gamma_s*solutions(i, j, k)%eq_soln%T), j=1,n), i=1,m)
+                write(ioout, '(A, 14F9.3)') ' Son. Vel., m/s  ', &
+                    ((sqrt(solutions(i, j, k)%eq_soln%n*R*solutions(i, j, k)%eq_partials%gamma_s*solutions(i, j, k)%eq_soln%T), j=1,n), i=1,m)
 
             else
 
@@ -1310,7 +1316,8 @@ contains
                 write(ioout, '(A, 14F9.3)') ' (dln(V)/dln(T))p', ((solutions(i, j, k)%eq_partials%dlnV_dlnT, j=1,n), i=1,m)
                 write(ioout, '(A, 14F9.4)') ' Cp, cal/g-K     ', ((solutions(i, j, k)%eq_soln%cp_eq/4.184d0, j=1,n), i=1,m)
                 write(ioout, '(A, 14F9.4)') ' Gamma_s         ', ((solutions(i, j, k)%eq_partials%gamma_s,   j=1,n), i=1,m)
-                write(ioout, '(A, 14F9.3)') ' Son. Vel., m/s  ', ((sqrt(solutions(i, j, k)%eq_soln%n*R*solutions(i, j, k)%eq_partials%gamma_s*solutions(i, j, k)%eq_soln%T), j=1,n), i=1,m)
+                write(ioout, '(A, 14F9.3)') ' Son. Vel., m/s  ', &
+                    ((sqrt(solutions(i, j, k)%eq_soln%n*R*solutions(i, j, k)%eq_partials%gamma_s*solutions(i, j, k)%eq_soln%T), j=1,n), i=1,m)
 
             end if
 
@@ -1332,7 +1339,8 @@ contains
                     write(ioout, '(A, 14F9.4)') " Conductivity    ", ((solutions(i, j, k)%eq_soln%conductivity_eq, j=1,n), i=1,m)
                 else
                     write(ioout, '(A, 14F9.4)') " Cp, cal/g-K     ", ((solutions(i, j, k)%eq_soln%cp_eq/4.184d0, j=1,n), i=1,m)
-                    write(ioout, '(A, 14F9.4)') " Conductivity    ", ((solutions(i, j, k)%eq_soln%conductivity_eq/4.184d0, j=1,n), i=1,m)
+                    write(ioout, '(A, 14F9.4)') " Conductivity    ", &
+                        ((solutions(i, j, k)%eq_soln%conductivity_eq/4.184d0, j=1,n), i=1,m)
                 end if
                 write(ioout, '(A, 14F9.4)') " Prandtl Number  ", ((solutions(i, j, k)%eq_soln%Pr_eq, j=1,n), i=1,m)
                 write(ioout, *) ""
@@ -1344,7 +1352,8 @@ contains
                     write(ioout, '(A, 14F9.4)') " Conductivity    ", ((solutions(i, j, k)%eq_soln%conductivity_fr, j=1,n), i=1,m)
                 else
                     write(ioout, '(A, 14F9.4)') " Cp, cal/g-K     ", ((solutions(i, j, k)%eq_soln%cp_fr/4.184d0, j=1,n), i=1,m)
-                    write(ioout, '(A, 14F9.4)') " Conductivity    ", ((solutions(i, j, k)%eq_soln%conductivity_fr/4.184d0, j=1,n), i=1,m)
+                    write(ioout, '(A, 14F9.4)') " Conductivity    ", &
+                        ((solutions(i, j, k)%eq_soln%conductivity_fr/4.184d0, j=1,n), i=1,m)
                 end if
                 write(ioout, '(A, 14F9.4)') " Prandtl Number  ", ((solutions(i, j, k)%eq_soln%Pr_fr, j=1,n), i=1,m)
                 write(ioout, *) ""
@@ -1392,9 +1401,11 @@ contains
                 if (.not. is_trace(idx)) then
                     eq_fmt = get_deton_species_format(solutions, idx, k, m, n, prob%output%mass_fractions, trace)
                     if (prob%output%mass_fractions) then
-                        write(ioout, eq_fmt) solver%eq_solver%products%species_names(idx), ((solutions(i, j, k)%eq_soln%mass_fractions(idx), j=1,n), i=1,m)
+                        write(ioout, eq_fmt) solver%eq_solver%products%species_names(idx), &
+                            ((solutions(i, j, k)%eq_soln%mass_fractions(idx), j=1,n), i=1,m)
                     else
-                        write(ioout, eq_fmt) solver%eq_solver%products%species_names(idx), ((solutions(i, j, k)%eq_soln%mole_fractions(idx), j=1,n), i=1,m)
+                        write(ioout, eq_fmt) solver%eq_solver%products%species_names(idx), &
+                            ((solutions(i, j, k)%eq_soln%mole_fractions(idx), j=1,n), i=1,m)
                     end if
                 end if
             end do
@@ -1703,7 +1714,8 @@ contains
 
             ! TODO: Print the o/f ratio and equivalent values
             call compute_fuel_ratios(prob, solver%reactants, k, of_ratio, pct_fuel, r_eq, phi_eq)
-            write(ioout, '(A, F10.5, A, F8.5, A, F8.5, A, F8.5)') 'O/F = ', of_ratio, '    % Fuel = ', pct_fuel, '    r, Eq. Ratio = ', r_eq, '    phi, Eq. Ratio = ', phi_eq
+            write(ioout, '(A, F10.5, A, F8.5, A, F8.5, A, F8.5)') 'O/F = ', &
+                of_ratio, '    % Fuel = ', pct_fuel, '    r, Eq. Ratio = ', r_eq, '    phi, Eq. Ratio = ', phi_eq
 
             ! Print the thermodynamic properties
             write(ioout, *) ""
@@ -1726,7 +1738,8 @@ contains
                 write(ioout, '(A, 18F14.5)') ' (dln(V)/dln(T))p', ((partials(i, j, k)%dlnV_dlnT,     i=1,m), j=1,n)
                 write(ioout, '(A, 18F14.5)') ' Cp, kJ/kg-K     ', ((solutions(i, j, k)%cp_eq,        i=1,m), j=1,n)
                 write(ioout, '(A, 18F14.5)') ' Gamma_s         ', ((partials(i, j, k)%gamma_s,       i=1,m), j=1,n)
-                write(ioout, '(A, 18F14.3)') ' Son. Vel., m/s  ', ((sqrt(solutions(i, j, k)%n * R * partials(i, j, k)%gamma_s * solutions(i, j, k)%T), i=1,m), j=1,n)
+                write(ioout, '(A, 18F14.3)') ' Son. Vel., m/s  ', &
+                    ((sqrt(solutions(i, j, k)%n * R * partials(i, j, k)%gamma_s * solutions(i, j, k)%T), i=1,m), j=1,n)
 
             else
 
@@ -1744,7 +1757,8 @@ contains
                 write(ioout, '(A, 18F14.5)') ' (dln(V)/dln(T))p', ((partials(i, j, k)%dlnV_dlnT,      i=1,m), j=1,n)
                 write(ioout, '(A, 18F14.5)') ' Cp, cal/g-K     ', ((solutions(i, j, k)%cp_eq/4.184d0, i=1,m), j=1,n)
                 write(ioout, '(A, 18F14.5)') ' Gamma_s         ', ((partials(i, j, k)%gamma_s,        i=1,m), j=1,n)
-                write(ioout, '(A, 18F14.3)') ' Son. Vel., m/s  ', ((sqrt(solutions(i, j, k)%n * R * partials(i, j, k)%gamma_s * solutions(i, j, k)%T), i=1,m), j=1,n)
+                write(ioout, '(A, 18F14.3)') ' Son. Vel., m/s  ', &
+                    ((sqrt(solutions(i, j, k)%n * R * partials(i, j, k)%gamma_s * solutions(i, j, k)%T), i=1,m), j=1,n)
 
             end if
 
@@ -1817,9 +1831,11 @@ contains
                 if (is_trace(idx) .eqv. .false.) then
                     eq_fmt = get_eq_species_format(solutions, idx, k, m, n, prob%output%mass_fractions, trace)
                     if (prob%output%mass_fractions) then
-                        write(ioout, eq_fmt) solver%products%species_names(idx), ((solutions(i, j, k)%mass_fractions(idx), i=1,m), j=1,n)
+                        write(ioout, eq_fmt) solver%products%species_names(idx), &
+                            ((solutions(i, j, k)%mass_fractions(idx), i=1,m), j=1,n)
                     else
-                        write(ioout, eq_fmt) solver%products%species_names(idx), ((solutions(i, j, k)%mole_fractions(idx), i=1,m), j=1,n)
+                        write(ioout, eq_fmt) solver%products%species_names(idx), &
+                            ((solutions(i, j, k)%mole_fractions(idx), i=1,m), j=1,n)
                     end if
                 end if
             end do
@@ -2046,7 +2062,8 @@ contains
 
                     ! Print the o/f ratio and equivalent values
                     call compute_fuel_ratios(prob, solver%eq_solver%reactants, j, of_ratio, pct_fuel, r_eq, phi_eq)
-                    write(ioout, '(A, F10.5, A, F8.5, A, F8.5, A, F8.5)') 'O/F = ', of_ratio, '    % Fuel = ', pct_fuel, '    r, Eq. Ratio = ', r_eq, '    phi, Eq. Ratio = ', phi_eq
+                    write(ioout, '(A, F10.5, A, F8.5, A, F8.5, A, F8.5)') &
+                        'O/F = ', of_ratio, '    % Fuel = ', pct_fuel, '    r, Eq. Ratio = ', r_eq, '    phi, Eq. Ratio = ', phi_eq
                     write(ioout,*) ""
 
                     ! Print the header with the station names
@@ -2107,10 +2124,12 @@ contains
                         write(ioout, '(A)') " WITH EQUILIBRIUM REACTIONS"
                         if (prob%output%siunit) then
                             write(ioout, thermo_fmt) " Cp, kJ/(kg-K)   ", (solutions(i, j, k)%eq_soln(idx)%cp_eq, idx=1,np)
-                            write(ioout, thermo_fmt) " Conductivity    ", (solutions(i, j, k)%eq_soln(idx)%conductivity_eq, idx=1,np)
+                            write(ioout, thermo_fmt) " Conductivity    ", &
+                                (solutions(i, j, k)%eq_soln(idx)%conductivity_eq, idx=1,np)
                         else
                             write(ioout, thermo_fmt) " Cp, cal/(g-K)   ", (solutions(i, j, k)%eq_soln(idx)%cp_eq/4.184d0, idx=1,np)
-                            write(ioout, thermo_fmt) " Conductivity    ", (solutions(i, j, k)%eq_soln(idx)%conductivity_eq/4.184d0, idx=1,np)
+                            write(ioout, thermo_fmt) " Conductivity    ", &
+                                (solutions(i, j, k)%eq_soln(idx)%conductivity_eq/4.184d0, idx=1,np)
                         end if
                         write(ioout, thermo_fmt) " Prandtl Number  ", (solutions(i, j, k)%eq_soln(idx)%Pr_eq, idx=1,np)
                         write(ioout, *) ""
@@ -2119,10 +2138,12 @@ contains
                         write(ioout, '(A)') " WITH FROZEN REACTIONS"
                         if (prob%output%siunit) then
                             write(ioout, thermo_fmt) " Cp, kJ/(kg-K)   ", (solutions(i, j, k)%eq_soln(idx)%cp_fr, idx=1,np)
-                            write(ioout, thermo_fmt) " Conductivity    ", (solutions(i, j, k)%eq_soln(idx)%conductivity_fr, idx=1,np)
+                            write(ioout, thermo_fmt) " Conductivity    ", &
+                                (solutions(i, j, k)%eq_soln(idx)%conductivity_fr, idx=1,np)
                         else
                             write(ioout, thermo_fmt) " Cp, cal/(g-K)   ", (solutions(i, j, k)%eq_soln(idx)%cp_fr/4.184d0, idx=1,np)
-                            write(ioout, thermo_fmt) " Conductivity    ", (solutions(i, j, k)%eq_soln(idx)%conductivity_fr/4.184d0, idx=1,np)
+                            write(ioout, thermo_fmt) " Conductivity    ", &
+                                (solutions(i, j, k)%eq_soln(idx)%conductivity_fr/4.184d0, idx=1,np)
                         end if
                         write(ioout, thermo_fmt) " Prandtl Number  ", (solutions(i, j, k)%eq_soln(idx)%Pr_fr, idx=1,np)
                         write(ioout, *) ""
@@ -2179,25 +2200,31 @@ contains
                     do ii = 1, solver%eq_solver%num_products
                         if (is_trace(ii) .eqv. .false.) then
                             if (frozen) then
-                                spec_fmt = get_rocket_species_format(solutions, ii, i, j, k, np, prob%output%mass_fractions, trace, .true., nfrz)
+                                spec_fmt = get_rocket_species_format(solutions, ii, i, j, k, np, &
+                                    prob%output%mass_fractions, trace, .true., nfrz)
                             else
-                                spec_fmt = get_rocket_species_format(solutions, ii, i, j, k, np, prob%output%mass_fractions, trace)
+                                spec_fmt = get_rocket_species_format(solutions, ii, i, j, k, np, &
+                                    prob%output%mass_fractions, trace)
                             end if
                             if (prob%output%mass_fractions) then
                                 if (frozen) then
                                     if (solutions(i, j, k)%eq_soln(nfrz)%mass_fractions(ii) > trace) then
-                                        write(ioout, spec_fmt) solver%eq_solver%products%species_names(ii), solutions(i, j, k)%eq_soln(nfrz)%mass_fractions(ii)
+                                        write(ioout, spec_fmt) solver%eq_solver%products%species_names(ii), &
+                                            solutions(i, j, k)%eq_soln(nfrz)%mass_fractions(ii)
                                     end if
                                 else
-                                    write(ioout, spec_fmt) solver%eq_solver%products%species_names(ii), (solutions(i, j, k)%eq_soln(idx)%mass_fractions(ii), idx=1,np)
+                                    write(ioout, spec_fmt) solver%eq_solver%products%species_names(ii), &
+                                        (solutions(i, j, k)%eq_soln(idx)%mass_fractions(ii), idx=1,np)
                                 end if
                             else
                                 if (frozen) then
                                     if (solutions(i, j, k)%eq_soln(nfrz)%mole_fractions(ii) > trace) then
-                                        write(ioout, spec_fmt) solver%eq_solver%products%species_names(ii), solutions(i, j, k)%eq_soln(nfrz)%mole_fractions(ii)
+                                        write(ioout, spec_fmt) solver%eq_solver%products%species_names(ii), &
+                                             solutions(i, j, k)%eq_soln(nfrz)%mole_fractions(ii)
                                     end if
                                 else
-                                    write(ioout, spec_fmt) solver%eq_solver%products%species_names(ii), (solutions(i, j, k)%eq_soln(idx)%mole_fractions(ii), idx=1,np)
+                                    write(ioout, spec_fmt) solver%eq_solver%products%species_names(ii), &
+                                        (solutions(i, j, k)%eq_soln(idx)%mole_fractions(ii), idx=1,np)
                                 end if
                             end if
                         end if
@@ -2293,28 +2320,35 @@ contains
                             write(ioout, ffmt) (solutions(i,j,k)%eq_soln(idx)%entropy, idx=x,y)
 
                             write(ioout, *) ""
-                            write(ioout, thermo_fmt, advance="no") 'M, (1/n)        ', (1.0/solutions(i, j, k)%eq_soln(idx)%n, idx=1,nc)
+                            write(ioout, thermo_fmt, advance="no") 'M, (1/n)        ', &
+                                (1.0/solutions(i, j, k)%eq_soln(idx)%n, idx=1,nc)
                             write(ioout, ffmt) (1.0/solutions(i, j, k)%eq_soln(idx)%n, idx=x,y)
 
                             if (frozen .eqv. .false.) then
-                                write(ioout, thermo_fmt, advance="no") '(dln(V)/dln(P))t', (solutions(i, j, k)%eq_partials(idx)%dlnV_dlnP, idx=1,nc)
+                                write(ioout, thermo_fmt, advance="no") '(dln(V)/dln(P))t', &
+                                    (solutions(i, j, k)%eq_partials(idx)%dlnV_dlnP, idx=1,nc)
                                 write(ioout, ffmt) (solutions(i, j, k)%eq_partials(idx)%dlnV_dlnP, idx=x,y)
 
-                                write(ioout, thermo_fmt, advance="no") '(dln(V)/dln(T))p', (solutions(i, j, k)%eq_partials(idx)%dlnV_dlnT, idx=1,nc)
+                                write(ioout, thermo_fmt, advance="no") '(dln(V)/dln(T))p', &
+                                     (solutions(i, j, k)%eq_partials(idx)%dlnV_dlnT, idx=1,nc)
                                 write(ioout, ffmt) (solutions(i, j, k)%eq_partials(idx)%dlnV_dlnT, idx=x,y)
                             end if
 
-                            write(ioout, thermo_fmt, advance="no") 'Cp, cal/(g-K)   ', (solutions(i, j, k)%eq_soln(idx)%cp_eq/4.184d0, idx=1,nc)
+                            write(ioout, thermo_fmt, advance="no") 'Cp, cal/(g-K)   ', &
+                                (solutions(i, j, k)%eq_soln(idx)%cp_eq/4.184d0, idx=1,nc)
                             write(ioout, ffmt) (solutions(i, j, k)%eq_soln(idx)%cp_eq/4.184d0, idx=x,y)
                         end if
 
-                        write(ioout, thermo_fmt, advance="no") 'Gamma_s         ', (solutions(i, j, k)%eq_partials(idx)%gamma_s, idx=1,nc)
+                        write(ioout, thermo_fmt, advance="no") 'Gamma_s         ', &
+                            (solutions(i, j, k)%eq_partials(idx)%gamma_s, idx=1,nc)
                         write(ioout, ffmt) (solutions(i, j, k)%eq_partials(idx)%gamma_s, idx=x,y)
 
-                        write(ioout, vsonic_fmt, advance="no") 'Son. Vel., m/s  ', (solutions(i, j, k)%v_sonic(idx), idx=1,nc)
+                        write(ioout, vsonic_fmt, advance="no") 'Son. Vel., m/s  ', &
+                            (solutions(i, j, k)%v_sonic(idx), idx=1,nc)
                         write(ioout, ffmt) (solutions(i, j, k)%v_sonic(idx), idx=x,y)
 
-                        write(ioout, thermo_fmt, advance="no") 'Mach            ', (solutions(i, j, k)%mach(idx), idx=1,nc)
+                        write(ioout, thermo_fmt, advance="no") 'Mach            ', &
+                            (solutions(i, j, k)%mach(idx), idx=1,nc)
                         write(ioout, ffmt) (solutions(i, j, k)%mach(idx), idx=x,y)
 
                         ! Write out transport properties
@@ -2325,45 +2359,56 @@ contains
                             write(ioout, *) ""
 
                             ! Viscosity
-                            write(ioout, '(A, F13.3)', advance="no") " Visc, Millipoise", (solutions(i, j, k)%eq_soln(idx)%viscosity, idx=1,nc)
+                            write(ioout, '(A, F13.3)', advance="no") " Visc, Millipoise", &
+                                (solutions(i, j, k)%eq_soln(idx)%viscosity, idx=1,nc)
                             write(ioout, '(F13.3)') (solutions(i, j, k)%eq_soln(idx)%viscosity, idx=x,y)
                             write(ioout, *) ""
 
                             ! Equilibrium properies
                             write(ioout, '(A)') " WITH EQUILIBRIUM REACTIONS"
                             if (prob%output%siunit) then
-                                write(ioout, '(A, F13.4)', advance="no") " Cp, kJ/(kg-K)   ", (solutions(i, j, k)%eq_soln(idx)%cp_eq, idx=1,nc)
+                                write(ioout, '(A, F13.4)', advance="no") " Cp, kJ/(kg-K)   ", &
+                                    (solutions(i, j, k)%eq_soln(idx)%cp_eq, idx=1,nc)
                                 write(ioout, '(F13.4)') (solutions(i, j, k)%eq_soln(idx)%cp_eq, idx=x,y)
 
-                                write(ioout, '(A, F13.3)', advance="no") " Conductivity    ", (solutions(i, j, k)%eq_soln(idx)%conductivity_eq, idx=1,nc)
+                                write(ioout, '(A, F13.3)', advance="no") " Conductivity    ", &
+                                    (solutions(i, j, k)%eq_soln(idx)%conductivity_eq, idx=1,nc)
                                 write(ioout, '(F13.3)') (solutions(i, j, k)%eq_soln(idx)%conductivity_eq, idx=x,y)
                             else
-                                write(ioout, '(A, F13.4)', advance="no") " Cp, cal/(g-K)   ", (solutions(i, j, k)%eq_soln(idx)%cp_eq/4.184d0, idx=1,nc)
+                                write(ioout, '(A, F13.4)', advance="no") " Cp, cal/(g-K)   ", &
+                                    (solutions(i, j, k)%eq_soln(idx)%cp_eq/4.184d0, idx=1,nc)
                                 write(ioout, '(F13.4)') (solutions(i, j, k)%eq_soln(idx)%cp_eq/4.184d0, idx=x,y)
 
-                                write(ioout, '(A, F13.3)', advance="no") " Conductivity    ", (solutions(i, j, k)%eq_soln(idx)%conductivity_eq/4.184d0, idx=1,nc)
+                                write(ioout, '(A, F13.3)', advance="no") " Conductivity    ", &
+                                    (solutions(i, j, k)%eq_soln(idx)%conductivity_eq/4.184d0, idx=1,nc)
                                 write(ioout, '(F13.3)') (solutions(i, j, k)%eq_soln(idx)%conductivity_eq/4.184d0, idx=x,y)
                             end if
-                            write(ioout, '(A, F13.4)', advance="no") " Prandtl Number  ", (solutions(i, j, k)%eq_soln(idx)%Pr_eq, idx=1,nc)
+                            write(ioout, '(A, F13.4)', advance="no") " Prandtl Number  ", &
+                                (solutions(i, j, k)%eq_soln(idx)%Pr_eq, idx=1,nc)
                             write(ioout, '(F13.4)') (solutions(i, j, k)%eq_soln(idx)%Pr_eq, idx=x,y)
                             write(ioout, *) ""
 
                             ! Frozen properties
                             write(ioout, '(A)') " WITH FROZEN REACTIONS"
                             if (prob%output%siunit) then
-                                write(ioout, '(A, F13.4)', advance="no") " Cp, kJ/(kg-K)   ", (solutions(i, j, k)%eq_soln(idx)%cp_fr, idx=1,nc)
+                                write(ioout, '(A, F13.4)', advance="no") " Cp, kJ/(kg-K)   ", &
+                                    (solutions(i, j, k)%eq_soln(idx)%cp_fr, idx=1,nc)
                                 write(ioout, '(F13.4)') (solutions(i, j, k)%eq_soln(idx)%cp_fr, idx=x,y)
 
-                                write(ioout, '(A, F13.3)', advance="no") " Conductivity    ", (solutions(i, j, k)%eq_soln(idx)%conductivity_fr, idx=1,nc)
+                                write(ioout, '(A, F13.3)', advance="no") " Conductivity    ", &
+                                    (solutions(i, j, k)%eq_soln(idx)%conductivity_fr, idx=1,nc)
                                 write(ioout, '(F13.3)') (solutions(i, j, k)%eq_soln(idx)%conductivity_fr, idx=x,y)
                             else
-                                write(ioout, '(A, F13.4)', advance="no") " Cp, cal/(g-K)   ", (solutions(i, j, k)%eq_soln(idx)%cp_fr/4.184d0, idx=1,nc)
+                                write(ioout, '(A, F13.4)', advance="no") " Cp, cal/(g-K)   ", &
+                                    (solutions(i, j, k)%eq_soln(idx)%cp_fr/4.184d0, idx=1,nc)
                                 write(ioout, '(F13.4)') (solutions(i, j, k)%eq_soln(idx)%cp_fr/4.184d0, idx=x,y)
 
-                                write(ioout, '(A, F13.3)', advance="no") " Conductivity    ", (solutions(i, j, k)%eq_soln(idx)%conductivity_fr/4.184d0, idx=1,nc)
+                                write(ioout, '(A, F13.3)', advance="no") " Conductivity    ", &
+                                    (solutions(i, j, k)%eq_soln(idx)%conductivity_fr/4.184d0, idx=1,nc)
                                 write(ioout, '(F13.3)') (solutions(i, j, k)%eq_soln(idx)%conductivity_fr/4.184d0, idx=x,y)
                             end if
-                            write(ioout, '(A, F13.4)', advance="no") " Prandtl Number  ", (solutions(i, j, k)%eq_soln(idx)%Pr_fr, idx=1,nc)
+                            write(ioout, '(A, F13.4)', advance="no") " Prandtl Number  ", &
+                                (solutions(i, j, k)%eq_soln(idx)%Pr_fr, idx=1,nc)
                             write(ioout, '(F13.4)') (solutions(i, j, k)%eq_soln(idx)%Pr_fr, idx=x,y)
                             write(ioout, *) ""
 
@@ -2422,19 +2467,26 @@ contains
                                 if (prob%output%mass_fractions) then
                                     if (frozen) then
                                         if (solutions(i, j, k)%eq_soln(nfrz)%mass_fractions(ii) > trace) then
-                                            write(ioout, '(1x, A15, 2x, F13.5)') solver%eq_solver%products%species_names(ii), solutions(i, j, k)%eq_soln(nfrz)%mass_fractions(ii)
+                                            write(ioout, '(1x, A15, 2x, F13.5)') &
+                                                solver%eq_solver%products%species_names(ii), &
+                                                solutions(i, j, k)%eq_soln(nfrz)%mass_fractions(ii)
                                         end if
                                     else
-                                        write(ioout, '(1x, A15, 2x, 3(F13.5))', advance="no") solver%eq_solver%products%species_names(ii), (solutions(i, j, k)%eq_soln(idx)%mass_fractions(ii), idx=1,nc)
+                                        write(ioout, '(1x, A15, 2x, 3(F13.5))', advance="no") &
+                                            solver%eq_solver%products%species_names(ii), &
+                                            (solutions(i, j, k)%eq_soln(idx)%mass_fractions(ii), idx=1,nc)
                                         write(ioout, '(3(F13.5)))') (solutions(i, j, k)%eq_soln(idx)%mass_fractions(ii), idx=x,y)
                                     end if
                                 else
                                     if (frozen) then
                                         if (solutions(i, j, k)%eq_soln(nfrz)%mole_fractions(ii) > trace) then
-                                            write(ioout, '(1x, A15, 2x, F13.5)') solver%eq_solver%products%species_names(ii), solutions(i, j, k)%eq_soln(nfrz)%mole_fractions(ii)
+                                            write(ioout, '(1x, A15, 2x, F13.5)') &
+                                                solver%eq_solver%products%species_names(ii), solutions(i, j, k)%eq_soln(nfrz)%mole_fractions(ii)
                                         end if
                                     else
-                                        write(ioout, '(1x, A15, 2x, 3(F13.5))', advance="no") solver%eq_solver%products%species_names(ii), (solutions(i, j, k)%eq_soln(idx)%mole_fractions(ii), idx=1,nc)
+                                        write(ioout, '(1x, A15, 2x, 3(F13.5))', advance="no") &
+                                            solver%eq_solver%products%species_names(ii), &
+                                            (solutions(i, j, k)%eq_soln(idx)%mole_fractions(ii), idx=1,nc)
                                         write(ioout, '(3(F13.5)))') (solutions(i, j, k)%eq_soln(idx)%mole_fractions(ii), idx=x,y)
                                     end if
                                 end if
