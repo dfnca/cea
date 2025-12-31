@@ -65,7 +65,7 @@ if(CEA_BUILD_TESTING)
     # Primary test: Run all example problems from NASA RP-1311
     add_test(
         NAME cea_main_test
-        COMMAND cea -v samples/rp1311_examples.inp
+        COMMAND cea -v samples/example1
         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
     )
 

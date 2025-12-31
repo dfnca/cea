@@ -105,6 +105,16 @@ with:
 The Python binding to CEA has been successfully compiled and executed on macOS,
 Linux, and Windows systems.
 
+## Examples
+
+Legacy CLI (classic `.inp` deck - run this from the `build/source` directory):
+
+    ./cea ../samples/example1
+
+Python example (runs the H2/O2 case after installing the Python bindings):
+
+    python source/bind/python/cea/samples/h2_02.py
+
 
 ## Manual Database Generation
 CEA requires thermodynamic and transport property databases. When using the
