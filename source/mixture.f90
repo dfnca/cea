@@ -118,7 +118,8 @@ contains
     !-----------------------------------------------------------------------
     ! Mixture Implementation
     !-----------------------------------------------------------------------
-    recursive function mixture_init(thermo, species_names, element_names, reactant_names, input_reactants, omitted_product_names, sort_condensed, ions) result(self)
+    recursive function mixture_init(thermo, species_names, element_names, reactant_names, &
+        input_reactants, omitted_product_names, sort_condensed, ions) result(self)
         ! Create a Mixture from a subset of species in a ThermoDB
         ! If element_names is specified, it must be a superset of elements in species_names
         ! This allows constructing multiple Mixtures with consistent element lists

@@ -1,6 +1,6 @@
 [build-system]
 build-backend = "scikit_build_core.build"
-requires = ["scikit-build-core>=0.11", "cython", "numpy>=2", "ninja", "setuptools"]
+requires = ["scikit-build-core>=0.11", "cython", "numpy>=2", "setuptools"]
 
 [project]
 name = "cea"
