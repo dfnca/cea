@@ -6,6 +6,7 @@ module cea_shock
     use cea_transport, only: TransportDB
     use cea_equilibrium, only: EqSolution, EqSolver, EqPartials
     use fb_utils
+    implicit none
 
     type :: ShockSolver
         !! Shock solver object

@@ -9,6 +9,7 @@ module cea_mixture
     use cea_units, only: convert_units_to_si
     use iso_c_binding
     use fb_utils, only: abort, is_empty
+    implicit none
 
 
     !-----------------------------------------------------------------------
@@ -154,17 +155,23 @@ contains
 
         ! Build the species list
         if (present(species_names)) then
+            call check_name_list_len(species_names, snl, 'mixture_init species')
             slist = species_names
         else if (present(input_reactants)) then
             block
                 character(snl), allocatable :: names(:)
                 allocate(names(size(input_reactants)))
                 do i = 1, size(input_reactants)
+                    call check_name_len(input_reactants(i)%name, snl, 'mixture_init reactant')
                     names(i) = input_reactants(i)%name
                 end do
                 slist = names
             end block
         else if (present(reactant_names)) then
+            call check_name_list_len(reactant_names, snl, 'mixture_init reactant')
+            if (present(omitted_product_names)) then
+                call check_name_list_len(omitted_product_names, snl, 'mixture_init omitted product')
+            end if
             block
                 type(Mixture) :: reactants
                 reactants = Mixture(thermo, reactant_names, ions=ions)
@@ -244,6 +251,7 @@ contains
         if (present(element_names)) then
 
             ! If element_names specified, use that
+            call check_name_list_len(element_names, enl, 'mixture_init element')
             self%element_names = element_names
 
             ! Allow flexible naming of electron
@@ -362,6 +370,10 @@ contains
         integer :: n, i, j, idx(1), np
         logical :: is_omitted, is_product
         real(dp), parameter :: tol = 1.d-10
+
+        if (present(omit)) then
+            call check_name_list_len(omit, snl, 'mixture_get_products omit')
+        end if
 
         np = thermo%num_products
 
@@ -1052,6 +1064,27 @@ contains
     !-----------------------------------------------------------------------
     ! Helper Functions
     !-----------------------------------------------------------------------
+    subroutine check_name_len(name, max_len, context)
+        character(*), intent(in) :: name
+        integer, intent(in) :: max_len
+        character(*), intent(in) :: context
+
+        if (len_trim(name) > max_len) then
+            call abort(trim(context)//' name too long: '//trim(name))
+        end if
+    end subroutine
+
+    subroutine check_name_list_len(names, max_len, context)
+        character(*), intent(in) :: names(:)
+        integer, intent(in) :: max_len
+        character(*), intent(in) :: context
+        integer :: i
+
+        do i = 1, size(names)
+            call check_name_len(names(i), max_len, context)
+        end do
+    end subroutine
+
     function get_species(thermo, name) result(species)
         ! Search a ThermoDB for a species of a given name
         ! Linear search for now. Lots of opportunities to be smarter
