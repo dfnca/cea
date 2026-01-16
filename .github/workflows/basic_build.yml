@@ -106,9 +106,20 @@ jobs:
         run: |
           scripts/develop.sh -G Ninja
 
-      - name: Run pFUnit tests
+      - name: Rebuild data libraries (compiler-native)
         run: |
-          ctest --output-on-failure --test-dir build-dev
+          pushd data
+          ../build-dev/source/cea --compile-thermo thermo.inp
+          ../build-dev/source/cea --compile-trans trans.inp
+          popd
+
+      - name: Run pFUnit tests
+        env:
+          GFORTRAN_ERROR_BACKTRACE: "1"
+          GFORTRAN_UNBUFFERED_ALL: "1"
+        run: |
+          ulimit -c unlimited
+          ctest --output-on-failure --test-dir build-dev -V
 
   python-tests:
     name: Python (ubuntu-22.04 / gcc 11)
