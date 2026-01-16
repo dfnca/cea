@@ -355,15 +355,18 @@ contains
 
         ! Locals
         integer, allocatable :: sort_map(:), uniq_map(:)
-        integer :: num_unique, skip
+        integer :: num_unique, skip, i
 
         call log_info('Building list of unique elements')
         elem = reshape(sym, [size(sym)])
         call sort(elem, sort_map)
         call unique(elem, uniq_map, num_unique)
 
-        skip = findloc(elem, "",1)
-        skip = max(skip, 0)
+        skip = 0
+        do i = 1, num_unique
+            if (.not. is_empty(elem(i))) exit
+            skip = skip + 1
+        end do
 
         elem = elem(1+skip:num_unique)
         call log_info('Found '//to_str(size(elem))//' unique elements')
