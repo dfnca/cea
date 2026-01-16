@@ -45,7 +45,7 @@ jobs:
       - name: Install build tools
         run: |
           python -m pip install --upgrade pip
-          python -m pip install ninja
+          python -m pip install ninja setuptools numpy cython
 
       - name: Record toolchain info
         run: |
@@ -100,7 +100,7 @@ jobs:
       - name: Install build tools
         run: |
           python -m pip install --upgrade pip
-          python -m pip install ninja
+          python -m pip install ninja setuptools numpy cython
 
       - name: Build CEA + GFE (pFUnit)
         run: |
@@ -131,12 +131,24 @@ jobs:
       - name: Install build tools
         run: |
           python -m pip install --upgrade pip
-          python -m pip install ninja pytest
+          python -m pip install ninja pytest setuptools numpy cython
 
       - name: Install CEA (editable)
         run: |
           python -m pip install -e .
 
+      - name: Import extension (no init)
+        env:
+          CEA_SKIP_INIT: "1"
+        run: |
+          python - <<'PY'
+          import cea
+          import cea.lib.libcea
+          print("cea import ok")
+          PY
+
       - name: Run pytest
+        env:
+          CEA_DATA_DIR: ${{ github.workspace }}/data
         run: |
           pytest source/bind/python/tests
