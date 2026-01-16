@@ -114,6 +114,11 @@ contains
         real(dp) :: cv
         integer :: i, idx
 
+        if (.not. allocated(self%fits)) then
+            cv = 0.0d0
+            return
+        end if
+
         ! Select temperature range
         idx = 1
         do i = 1,self%num_intervals
@@ -133,6 +138,11 @@ contains
         real(dp) :: cp
         integer :: i, idx
 
+        if (.not. allocated(self%fits)) then
+            cp = 0.0d0
+            return
+        end if
+
         ! Select temperature range
         idx = 1
         do i = 1,self%num_intervals
@@ -151,6 +161,11 @@ contains
         real(dp), intent(in) :: T
         real(dp) :: u_R
         integer :: i, idx
+
+        if (.not. allocated(self%fits)) then
+            u_R = self%calc_enthalpy(T) - T
+            return
+        end if
 
         ! Select temperature range
         idx = 1
@@ -196,6 +211,11 @@ contains
         real(dp) :: s_R
         integer :: i, idx
 
+        if (.not. allocated(self%fits)) then
+            s_R = 0.0d0
+            return
+        end if
+
         ! Select temperature range
         idx = 1
         do i = 1,self%num_intervals
@@ -214,6 +234,11 @@ contains
         real(dp), intent(in) :: T
         real(dp) :: g
         integer :: i, idx
+
+        if (.not. allocated(self%fits)) then
+            g = self%calc_enthalpy(T)
+            return
+        end if
 
         ! Select temperature range
         idx = 1
