@@ -276,7 +276,8 @@ contains
         ! Validate formulas before building the element list
         do i = 1, ns
             if (.not. allocated(self%species(i)%formula)) then
-                call abort('mixture_init: Missing formula for species '//trim(self%species_names(i)))
+                call abort('mixture_init: Missing formula for species '//trim(self%species_names(i))// &
+                           ' (check thermo.lib build)')
             end if
             if (.not. allocated(self%species(i)%formula%elements)) then
                 call abort('mixture_init: Missing formula elements for species '//trim(self%species_names(i)))
@@ -1251,6 +1252,16 @@ contains
             candidate => thermo%product_thermo(i)
             if (names_match(name, candidate%name)) then
                 species = candidate
+                ! Ensure formula components are present even if allocatable assignment is incomplete.
+                if (allocated(candidate%formula)) then
+                    if (.not. allocated(species%formula)) allocate(species%formula)
+                    if (allocated(candidate%formula%elements)) then
+                        species%formula%elements = candidate%formula%elements
+                    end if
+                    if (allocated(candidate%formula%coefficients)) then
+                        species%formula%coefficients = candidate%formula%coefficients
+                    end if
+                end if
                 if (present(found)) found = .true.
                 return
             end if
@@ -1261,6 +1272,16 @@ contains
             candidate => thermo%reactant_thermo(i)
             if (names_match(name, candidate%name)) then
                 species = candidate
+                ! Ensure formula components are present even if allocatable assignment is incomplete.
+                if (allocated(candidate%formula)) then
+                    if (.not. allocated(species%formula)) allocate(species%formula)
+                    if (allocated(candidate%formula%elements)) then
+                        species%formula%elements = candidate%formula%elements
+                    end if
+                    if (allocated(candidate%formula%coefficients)) then
+                        species%formula%coefficients = candidate%formula%coefficients
+                    end if
+                end if
                 if (present(found)) found = .true.
                 return
             end if
