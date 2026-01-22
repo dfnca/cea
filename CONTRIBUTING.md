@@ -15,6 +15,38 @@ CEA is governed by the following priorities:
 
 Changes that improve readability, documentation, or interfaces are often welcome. Changes that alter numerical behavior require careful justification and review.
 
+## Getting Started
+
+### Setting Up Your Development Environment
+
+1. **Fork and clone the repository**
+   ```bash
+   git clone https://github.com/your-username/cea.git
+   cd cea
+   ```
+
+2. **Choose a development preset**
+   CEA provides CMake presets for development. For contributors, use one of:
+   - `dev` – GNU/gfortran with all bindings (recommended for most contributors)
+   - `dev-intel` – Intel ifort with all bindings
+   - `dev-ub-hunt` – GNU with undefined behavior detection (for advanced debugging)
+
+3. **Configure and build**
+   ```bash
+   cmake --preset dev
+   cmake --build build-dev
+   ```
+
+4. **Run tests to verify your setup**
+   ```bash
+   cd build-dev
+   ctest
+   ```
+
+For Python development, see the [Python Binding Rebuilds](#python-binding-rebuilds-editable-installs) section below.
+
+See [README.md](README.md) for detailed build instructions and requirements.
+
 ## Codebase Overview
 
 CEA consists of three primary layers:
@@ -50,6 +82,9 @@ Large refactors or algorithmic changes should be discussed before implementation
    - Why the change is needed
    - Whether numerical behavior is expected to change
    This helps avoid duplicated effort and ensures alignment.
+   Use the issue templates for bug reports and feature requests:
+   - `.github/ISSUE_TEMPLATE/bug_report.md`
+   - `.github/ISSUE_TEMPLATE/feature_request.md`
 
 2. **Make Small, Focused Changes**
    Each pull request should ideally address one concern:
@@ -97,6 +132,50 @@ At minimum, contributors should verify that:
 - Existing tests pass
 - No unintended behavior changes occur
 
+### Running Tests
+
+CEA uses pFUnit (part of the Goddard Fortran Ecosystem) for unit testing. Tests are enabled via the `CEA_BUILD_TESTING` CMake option.
+
+**Prerequisites:**
+1. Clone GFE into the `extern/` directory:
+   ```bash
+   cd extern
+   git clone https://github.com/Goddard-Fortran-Ecosystem/GFE.git
+   cd GFE
+   git submodule update --init
+   ```
+
+2. Configure CEA with testing enabled (the `dev*` presets enable this by default):
+   ```bash
+   cmake --preset dev
+   cmake --build build-dev
+   ```
+
+**Running all tests:**
+```bash
+cd build-dev
+ctest
+```
+
+**Running specific tests:**
+```bash
+# Run core CEA unit tests with verbose output
+ctest -R cea_core_test -V
+
+# Run all main interface tests
+ctest -R cea_main_test
+
+# Run C binding tests
+ctest -R cea_bindc
+```
+
+**Available test suites:**
+- `cea_core_test` – Core Fortran solver unit tests
+- `cea_main_test*` – Legacy CLI interface tests
+- `cea_bindc_*` – C binding validation tests
+
+For Python tests, see the [Python Binding Rebuilds](#python-binding-rebuilds-editable-installs) section.
+
 ## Python Binding Rebuilds (Editable Installs)
 
 The Python package uses scikit-build-core with Ninja. Editable installs do not rebuild on import,
@@ -108,6 +187,11 @@ Recommended workflow:
 - Ensure `numpy` is installed in your active Python environment.
 - Rebuild the editable install (uses `--no-build-isolation`): `make py-rebuild`
 - Run Python tests: `pytest source/bind/python/tests`
+
+Python database lookup follows the same precedence as the CLI: current working
+directory, `CEA_DATA_DIR` (if set), packaged `cea/data`, then the repo `data/`
+directory when running from a source checkout. Set `CEA_DATA_DIR` to point to
+custom databases if needed.
 
 If you are unsure how to test a change, ask in the issue or PR.
 
@@ -140,10 +224,25 @@ There is no strict formatting tool enforced, but contributors should follow exis
 
 ## Commit and Pull Request Guidelines
 
+### Branch Naming
+
+Branch names must use one of the following prefixes:
+
+- `feat/` – New features
+- `fix/` – Bug fixes
+- `docs/` – Documentation changes
+- `chore/` – Build, tooling, dependencies
+- `refactor/` – Code restructuring (no behavior change)
+- `test/` – Test additions or improvements
+- `exp/` – Experimental work
+- `wip/` – Work in progress
+
+Prefer short, descriptive topic names (e.g., `fix/python-import-error`, `docs/build-instructions`).
+
 ### Commits
 
 - Use clear, descriptive commit messages
-- Avoid “drive-by” formatting or whitespace changes
+- Avoid "drive-by" formatting or whitespace changes
 
 ### Pull Requests
 
@@ -153,6 +252,9 @@ Your PR description should include:
 - Motivation
 - Impacted components
 - Whether numerical behavior changes (yes/no)
+
+The PR template provides a concise checklist:
+- `.github/pull_request_template.md`
 
 ## What Not to Change
 
