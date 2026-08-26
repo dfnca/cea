@@ -246,6 +246,41 @@ Windows + Intel oneAPI (Step-by-Step)
 This workflow was validated with Intel oneAPI 2025.3 and Visual Studio 2019 or
 later. It covers the core application plus C and Python bindings.
 
+Automated install
+^^^^^^^^^^^^^^^^^
+
+The repository includes a PowerShell installer that downloads and installs
+pFUnit, builds the Fortran, C, Python, and MATLAB-compatible interfaces, runs
+CTest and the Python tests, and installs CEA. Excel is disabled. From the CEA
+source directory, run::
+
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\install_windows_oneapi.ps1
+
+The script detects both Intel's component layout (``setvars.bat``) and unified
+layout (``<version>\oneapi-vars.bat``), then loads the oneAPI environment when
+needed. GNU M4 is also required by pFUnit's gFTL dependency; the script detects
+it on ``PATH`` and in common MSYS2, Git, and Conda locations. It uses the active
+``python`` by default. To select another interpreter or installation directory::
+
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\install_windows_oneapi.ps1 `
+        -Python C:\Python314\python.exe `
+        -InstallPrefix C:\cea
+
+If GNU M4 is installed in another location, pass it explicitly::
+
+    .\scripts\install_windows_oneapi.ps1 -M4Executable C:\msys64\usr\bin\m4.exe
+
+The installer skips gFTL's own dependency self-tests, which otherwise require
+GNU AWK and ``cpp`` on Windows even when pFUnit testing is disabled. This does
+not disable the CEA pFUnit, CLI, C-interface, or Python test suites.
+
+Run ``Get-Help .\scripts\install_windows_oneapi.ps1 -Detailed`` for all
+options. Existing build directories are reused, so repeating the command is an
+incremental rebuild.
+
+Manual install
+^^^^^^^^^^^^^^
+
 Prerequisites:
 
 * Visual Studio 2019 or later.
@@ -296,8 +331,8 @@ Validation checks:
 
 * Core interface regression (from the CEA root)::
 
-      cd build-intel\source
-      python ..\..\test\main_interface\test_main.py
+      set "CEA_EXE=<cea_source_dir>\build-intel\source\cea.exe"
+      python test\main_interface\test_main.py
 
   Expected result for this check is 14/14 passing.
 
